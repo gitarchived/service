@@ -21,3 +21,18 @@ func (d *DB) CreateRepository(host, owner, name string) (*Repository, error) {
 
 	return repo, nil
 }
+
+func (d *DB) SearchRepositories(query string, index int) ([]*Repository, bool, error) {
+	var repos []*Repository
+
+	if err := d.Where("name LIKE ? OR owner LIKE ?", "%"+query+"%", "%"+query+"%").Offset((index - 1) * 10).Limit(10).Find(&repos).Error; err != nil {
+		return nil, false, err
+	}
+
+	// Pagination
+	if len(repos) > 10 {
+		return repos[(index-1)*10 : index*10], true, nil
+	}
+
+	return repos, false, nil
+}
