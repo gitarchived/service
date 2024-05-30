@@ -1,0 +1,18 @@
+services:
+  rabbitmq:
+    image: 'rabbitmq:3-management'
+    environment:
+      - RABBITMQ_DEFAULT_PASS=1
+      - RABBITMQ_DEFAULT_USER=admin
+    container_name: rabbitmq
+    hostname: rabbit
+    ports:
+      - 5672:5672
+      - 15672:15672
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=1
+    ports:
+      - 5432:5432
+    container_name: pg
