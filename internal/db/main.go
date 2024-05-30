@@ -11,14 +11,23 @@ type DB struct {
 	gorm.DB
 }
 
-func Connect() (DB, error) {
+func Connect() (*DB, error) {
 	db, err := gorm.Open(postgres.Open(os.Getenv("PG_URL")), &gorm.Config{})
 
 	db.AutoMigrate(&Host{}, &Repository{})
 
 	if err != nil {
-		return DB{}, err
+		return &DB{}, err
 	}
 
-	return DB{DB: *db}, nil
+	// Add hosts to the database
+	if err := db.Where("name = ?", "github").First(&Host{}).Error; err != nil {
+		db.Create(&Host{
+			Name:   "github",
+			URL:    "https://github.com/",
+			Prefix: "github.com",
+		})
+	}
+
+	return &DB{*db}, nil
 }

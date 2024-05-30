@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gitarchived/service/internal/api/routes"
 	"github.com/gitarchived/service/internal/db"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/limiter"
@@ -31,7 +32,7 @@ func Init() {
 		},
 	}))
 
-	_, err := db.Connect()
+	db, err := db.Connect()
 
 	if err != nil {
 		log.Fatal(err)
@@ -42,6 +43,10 @@ func Init() {
 			"message": "GitArchived API",
 			"status":  200,
 		})
+	})
+
+	app.Post("/create", func(c *fiber.Ctx) error {
+		return routes.Create(c, db)
 	})
 
 	app.Listen(":8080")

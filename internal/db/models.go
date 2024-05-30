@@ -1,6 +1,10 @@
 package db
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 type Host struct {
 	gorm.Model `json:"-"`
@@ -12,10 +16,11 @@ type Host struct {
 
 type Repository struct {
 	gorm.Model `json:"-"`
-	ID         uint   `json:"id"`
-	Owner      string `json:"owner"`
-	Name       string `json:"name"`
-	Host       string `json:"host"`
-	Deleted    bool   `json:"deleted"`
-	LastCommit string `json:"last_commit"`
+	ID         uint      `json:"id"`
+	Owner      string    `json:"owner"`
+	Name       string    `json:"name"`
+	Host       string    `json:"host"`
+	Deleted    bool      `json:"deleted"`
+	LastCommit string    `json:"last_commit"`
+	CreatedAt  time.Time `json:"created_at"`
 }
