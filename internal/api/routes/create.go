@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/gitarchived/service/internal/db"
+	"github.com/gitarchived/service/internal/util"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
 )
@@ -46,6 +47,13 @@ func Create(c *fiber.Ctx, db *db.DB) error {
 	name := split[2]
 
 	if !db.IsValidHost(host) {
+		return c.Status(400).JSON(fiber.Map{
+			"status":  400,
+			"message": "Bad Request",
+		})
+	}
+
+	if !util.IsOk(body.Url) {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  400,
 			"message": "Bad Request",

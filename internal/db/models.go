@@ -21,6 +21,6 @@ type Repository struct {
 	Name       string    `json:"name"`
 	Host       string    `json:"host"`
 	Deleted    bool      `json:"deleted"`
-	LastCommit string    `json:"last_commit"`
-	CreatedAt  time.Time `json:"created_at"`
+	LastCommit string    `json:"lastCommit"`
+	CreatedAt  time.Time `json:"createdAt"`
 }
