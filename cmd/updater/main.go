@@ -1,11 +1,12 @@
 package main
 
 import (
-	"encoding/json"
 	"log"
 
 	"github.com/gitarchived/service/internal/db"
 	"github.com/gitarchived/service/internal/rabbit"
+	"github.com/gitarchived/service/internal/s3"
+	"github.com/gitarchived/service/internal/updater"
 	"github.com/joho/godotenv"
 )
 
@@ -16,7 +17,13 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	_, err = db.Connect()
+	d, err := db.Connect()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	s3, err := s3.Connect()
 
 	if err != nil {
 		log.Fatal(err)
@@ -64,15 +71,13 @@ func main() {
 
 	go func() {
 		for dl := range msgs {
-			var data db.Repository
-			err := json.Unmarshal(dl.Body, &data)
+			log.Printf("[+] Received message: %s\n", dl.Body)
+			err := updater.Update(d, s3, &dl)
 
 			if err != nil {
-				log.Printf("[-] Error: %v", err)
-				continue
+				log.Printf("[-] Error: %s\n", err)
 			}
 
-			log.Printf("[+] Processing: %v", data.ID)
 			dl.Ack(false)
 		}
 	}()

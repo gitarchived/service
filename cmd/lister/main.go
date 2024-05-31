@@ -79,7 +79,7 @@ func main() {
 	}
 
 	_, err = s.NewJob(
-		gocron.DurationJob(time.Minute),
+		gocron.DurationJob(time.Hour),
 		gocron.NewTask(
 			func() {
 				var repos []db.Repository
@@ -119,7 +119,10 @@ func main() {
 					}
 
 					if repo.LastCommit != commit {
-						json, err := json.Marshal(repo)
+						json, err := json.Marshal(rabbit.Repository{
+							Repository:      repo,
+							LastCommitKnown: commit,
+						})
 
 						if err != nil {
 							log.Println(err)

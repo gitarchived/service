@@ -56,3 +56,11 @@ func (d *DB) RepositoriesByOwner(host string, owner string) ([]*Repository, erro
 
 	return repos, nil
 }
+
+func (d *DB) UpdateRepositoryCommit(host, owner, name, commit string) error {
+	if err := d.Model(&Repository{}).Where("host = ? AND owner = ? AND name = ?", host, owner, name).Update("last_commit", commit).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
