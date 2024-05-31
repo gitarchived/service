@@ -66,14 +66,16 @@ func Init() {
 	app.Get("/:host/:owner", func(c *fiber.Ctx) error {
 		return routes.Owner(c, db)
 	})
-
-	// ! 404 handler needs to be at the end
-	app.Use(func(c *fiber.Ctx) error {
+  
+  // ! 404 handler needs to be at the end
+app.Use(func(c *fiber.Ctx) error {
 		return c.Status(404).JSON(fiber.Map{
 			"message": "Not Found",
 			"status":  404,
 		})
 	})
+
+
 
 	app.Listen(":8080")
 }
