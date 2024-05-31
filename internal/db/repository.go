@@ -46,3 +46,13 @@ func (d *DB) SearchRepositories(query string, index int) ([]*Repository, bool, e
 
 	return repos, false, nil
 }
+
+func (d *DB) RepositoriesByOwner(host string, owner string) ([]*Repository, error) {
+	var repos []*Repository
+
+	if err := d.Where("host = ? AND owner = ?", host, owner).Find(&repos).Error; err != nil {
+		return nil, err
+	}
+
+	return repos, nil
+}
