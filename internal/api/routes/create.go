@@ -42,7 +42,7 @@ func Create(c *fiber.Ctx, db *db.DB) error {
 		})
 	}
 
-	host := split[0]
+	host := strings.Split(split[0], ".")[0]
 	owner := split[1]
 	name := split[2]
 

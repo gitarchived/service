@@ -2,6 +2,7 @@ package routes
 
 import (
 	"strconv"
+	"strings"
 
 	"github.com/gitarchived/service/internal/db"
 	"github.com/gofiber/fiber/v2"
@@ -15,7 +16,7 @@ func Search(c *fiber.Ctx, db *db.DB) error {
 		index = 1
 	}
 
-	if query == "" {
+	if query == "" || strings.TrimSpace(query) == "" {
 		return c.Status(400).JSON(fiber.Map{
 			"status":  400,
 			"message": "Bad Request",

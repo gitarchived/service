@@ -53,5 +53,9 @@ func Init() {
 		return routes.Search(c, db)
 	})
 
+	app.Get("/:host/:owner/:name", func(c *fiber.Ctx) error {
+		return routes.Get(c, db)
+	})
+
 	app.Listen(":8080")
 }

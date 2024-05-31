@@ -22,6 +22,16 @@ func (d *DB) CreateRepository(host, owner, name string) (*Repository, error) {
 	return repo, nil
 }
 
+func (d *DB) GetRepository(host, owner, name string) (*Repository, error) {
+	repo := &Repository{}
+
+	if err := d.Where("host = ? AND owner = ? AND name = ?", host, owner, name).First(repo).Error; err != nil {
+		return nil, err
+	}
+
+	return repo, nil
+}
+
 func (d *DB) SearchRepositories(query string, index int) ([]*Repository, bool, error) {
 	var repos []*Repository
 
