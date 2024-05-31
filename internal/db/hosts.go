@@ -7,3 +7,13 @@ func (d *DB) IsValidHost(host string) bool {
 
 	return true
 }
+
+func (d *DB) GetHostByName(name string) (Host, error) {
+	var host Host
+
+	if err := d.Where("name = ?", name).First(&host).Error; err != nil {
+		return host, err
+	}
+
+	return host, nil
+}
