@@ -1,4 +1,4 @@
-# GitArchived Service
+# GitArchived Service (Under Development)
 
 GitArchived service is a repository that hosts the platform's new backend. This backend will replace the current one.
 
@@ -8,8 +8,8 @@ The new backend offers several advantages, including enhanced stability and easi
 
 ### Key Changes:
 
-1. **Cronjob to Lister**:
-   - We have moved the cronjob responsible for checking repositories to a new component called `lister`. The lister places repositories in the appropriate queue for further processing.
+1. **Lister**:
+   - Previously, the updater was responsible for directly checking repositories for updates. Now, this task has been assigned to a new component called the `lister`. The lister is responsible for identifying repositories that need to be updated and placing them in the appropriate RabbitMQ queues for further processing.
 
 2. **Introduction of the Deleter**:
    - We introduced the `deleter`, a worker dedicated to performing precise tests on repositories considered unreachable by the lister. Previously, this function was integrated into the updater.
