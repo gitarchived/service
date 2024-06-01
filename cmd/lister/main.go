@@ -56,7 +56,7 @@ func main() {
 	}
 
 	qRemove, err := ch.QueueDeclare(
-		"remove",
+		"delete",
 		true,
 		false,
 		false,
@@ -79,7 +79,7 @@ func main() {
 	}
 
 	_, err = s.NewJob(
-		gocron.DurationJob(time.Hour),
+		gocron.DurationJob(time.Minute),
 		gocron.NewTask(
 			func() {
 				var repos []db.Repository
@@ -99,7 +99,10 @@ func main() {
 					commit, err := git.RemoteLastCommit(url)
 
 					if err != nil {
-						json, err := json.Marshal(repo)
+						json, err := json.Marshal(rabbit.Repository{
+							Repository:      repo,
+							LastCommitKnown: "",
+						})
 
 						if err != nil {
 							log.Println(err)

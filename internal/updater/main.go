@@ -1,7 +1,6 @@
 package updater
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
@@ -14,15 +13,13 @@ import (
 )
 
 func Update(d *db.DB, s *s3.S3, a *amqp.Delivery) error {
-	var msg rabbit.Repository
-
-	err := json.Unmarshal(a.Body, &msg)
-
-	data := msg.Repository
+	msg, err := rabbit.MessageRepositoryToJson(a.Body)
 
 	if err != nil {
 		return err
 	}
+
+	data := msg.Repository
 
 	// Bundling the repo
 	host, err := d.GetHostByName(data.Host)
@@ -62,7 +59,7 @@ func Update(d *db.DB, s *s3.S3, a *amqp.Delivery) error {
 	}
 
 	// Update the last commit
-	if err = d.UpdateRepositoryCommit(data.Host, data.Owner, data.Name, msg.LastCommitKnown); err != nil {
+	if err = d.UpdateRepositoryCommit(data.ID, msg.LastCommitKnown); err != nil {
 		return err
 	}
 

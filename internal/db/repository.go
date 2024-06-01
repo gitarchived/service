@@ -57,9 +57,17 @@ func (d *DB) RepositoriesByOwner(host string, owner string) ([]*Repository, erro
 	return repos, nil
 }
 
-func (d *DB) UpdateRepositoryCommit(host, owner, name, commit string) error {
-	if err := d.Model(&Repository{}).Where("host = ? AND owner = ? AND name = ?", host, owner, name).Update("last_commit", commit).Error; err != nil {
+func (d *DB) UpdateRepositoryCommit(id uint, commit string) error {
+	if err := d.Model(&Repository{}).Where("id = ?", id).Update("last_commit", commit).Error; err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (d *DB) DeleteRepository(id uint) error {
+	if err := d.Model(&Repository{}).Where("id = ?", id).Update("deleted", true); err.Error != nil {
+		return err.Error
 	}
 
 	return nil

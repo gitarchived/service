@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/gitarchived/service/internal/api/middlewares"
 	"github.com/gitarchived/service/internal/api/routes"
 	"github.com/gitarchived/service/internal/db"
 	"github.com/gofiber/fiber/v2"
@@ -37,6 +38,8 @@ func Init() {
 			})
 		},
 	}))
+
+	app.Use(middlewares.Headers)
 
 	db, err := db.Connect()
 

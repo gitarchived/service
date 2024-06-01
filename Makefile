@@ -2,6 +2,7 @@ all:
 	@make api
 	@make lister
 	@make updater
+	@make deleter
 
 run:
 	@sh ./scripts/run.sh $(filter-out $@,$(MAKECMDGOALS))
@@ -14,3 +15,6 @@ lister:
 
 updater:
 	@go build -o ./bin/updater ./cmd/updater/main.go
+
+deleter:
+	@go build -o ./bin/deleter ./cmd/deleter/main.go
