@@ -84,7 +84,7 @@ func main() {
 			func() {
 				var repos []db.Repository
 
-				if err := d.Find(&repos).Error; err != nil {
+				if err := d.Where("deleted = ?", false).Find(&repos).Error; err != nil {
 					log.Println(err)
 				}
 
