@@ -143,6 +143,8 @@ func main() {
 							},
 						)
 					}
+
+					time.Sleep(5 * time.Second) // Avoid rate limit
 				}
 			},
 		),
