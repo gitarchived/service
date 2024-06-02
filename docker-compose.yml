@@ -2,17 +2,82 @@ services:
   rabbitmq:
     image: 'rabbitmq:3-management'
     environment:
-      - RABBITMQ_DEFAULT_PASS=1
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
       - RABBITMQ_DEFAULT_USER=admin
     container_name: rabbitmq
     hostname: rabbit
     ports:
       - 5672:5672
       - 15672:15672
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
+
   postgres:
     image: postgres
     environment:
-      - POSTGRES_PASSWORD=1
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
     ports:
       - 5432:5432
-    container_name: pg
+    container_name: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5 
+
+  api:
+    build: 
+      context: .
+      dockerfile: ./build/api.Dockerfile
+    ports:
+      - "80:8080"
+    env_file: ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  lister:
+    build: 
+      context: .
+      dockerfile: ./build/lister.Dockerfile
+    env_file: ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  updater:
+    build: 
+      context: .
+      dockerfile: ./build/updater.Dockerfile
+    env_file: ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+  deleter:
+    build: 
+      context: .
+      dockerfile: ./build/deleter.Dockerfile
+    env_file: ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
