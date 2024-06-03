@@ -67,6 +67,10 @@ func main() {
 		nil,          // args
 	)
 
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	var forever chan struct{}
 
 	go func() {
@@ -78,7 +82,11 @@ func main() {
 				log.Printf("[-] Error: %s\n", err)
 			}
 
-			dl.Ack(false)
+			err = dl.Ack(false)
+
+			if err != nil {
+				log.Printf("[-] Error ack: %s", err)
+			}
 		}
 	}()
 

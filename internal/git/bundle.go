@@ -9,8 +9,8 @@ func Bundle(name string, id uint) error {
 	cmd := exec.Command("git", "bundle", "create", fmt.Sprintf("%d.bundle", id), "HEAD")
 
 	// Set environment variables to avoid asking for credentials
-	cmd.Env = append(cmd.Env, fmt.Sprintf("GIT_ASKPASS=%s", "echo"))
-	cmd.Env = append(cmd.Env, fmt.Sprintf("GIT_TERMINAL_PROMPT=0"))
+	cmd.Env = append(cmd.Env, "GIT_ASKPASS=echo")
+	cmd.Env = append(cmd.Env, "GIT_TERMINAL_PROMPT=0")
 
 	cmd.Dir = fmt.Sprintf("./%s", name)
 

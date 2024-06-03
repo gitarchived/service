@@ -78,5 +78,9 @@ func Init() {
 		})
 	})
 
-	app.Listen(":8080")
+	err = app.Listen(":8080")
+
+	if err != nil {
+		panic(err) // Panic because the application should not continue if the server fails to start
+	}
 }

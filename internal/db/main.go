@@ -14,7 +14,11 @@ type DB struct {
 func Connect() (*DB, error) {
 	db, err := gorm.Open(postgres.Open(os.Getenv("PG_URL")), &gorm.Config{})
 
-	db.AutoMigrate(&Host{}, &Repository{})
+	if err != nil {
+		return &DB{}, err
+	}
+
+	err = db.AutoMigrate(&Host{}, &Repository{})
 
 	if err != nil {
 		return &DB{}, err

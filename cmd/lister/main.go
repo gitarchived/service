@@ -119,6 +119,10 @@ func main() {
 								Body:        []byte(json),
 							},
 						)
+
+						if err != nil {
+							log.Println("Error publishing message", err)
+						}
 					}
 
 					if repo.LastCommit != commit {
@@ -142,6 +146,10 @@ func main() {
 								Body:        []byte(json),
 							},
 						)
+
+						if err != nil {
+							fmt.Println("Error publishing message", err)
+						}
 					}
 
 					time.Sleep(5 * time.Second) // Avoid rate limit
