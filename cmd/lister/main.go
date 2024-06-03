@@ -79,7 +79,7 @@ func main() {
 	}
 
 	_, err = s.NewJob(
-		gocron.DurationJob(time.Minute),
+		gocron.DurationJob(time.Hour),
 		gocron.NewTask(
 			func() {
 				var repos []db.Repository
